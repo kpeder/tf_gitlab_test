@@ -34,7 +34,7 @@ resource "null_resource" "provisioner" {
       "echo 'installing postfix'",
       "sudo apt-get install -y postfix",
       "echo 'installing gitlab'",
-      "sudo EXTERNAL_URL='http://gitlab.mygitlab.com' apt-get install -y gitlab-ee"
+      "sudo EXTERNAL_URL='http://${element(aws_instance.ubuntu16.*.public_dns, count.index)}' apt-get install -y gitlab-ee"
     ]
 
     connection {
