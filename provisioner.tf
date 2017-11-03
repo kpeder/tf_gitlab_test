@@ -1,7 +1,7 @@
 resource "null_resource" "provisioner" {
 
   triggers {
-    instance_id = "${aws_instance.ubuntu16.id}"
+    instance_id = "${join(",", aws_instance.ubuntu16.*.id)}"
   }
 
   provisioner "remote-exec" {
@@ -40,9 +40,11 @@ resource "null_resource" "provisioner" {
     connection {
       type = "ssh"
       user = "ubuntu"
-      host = "${aws_instance.ubuntu16.public_dns}"
+      host = "${element(aws_instance.ubuntu16.*.public_dns, count.index)}"
     }
 
   }
+
+  count = "${var.inst_count}"
 
 }

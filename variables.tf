@@ -1,6 +1,5 @@
 /* Global variables */
 variable "keypair" {}
-variable "keyfile" {}
 
 /* Region-specific setup is below. Uses
    multiple regions, "primary" & "backup" for DR. */
