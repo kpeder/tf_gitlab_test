@@ -1,4 +1,4 @@
-resource "aws_instance" "ubuntu16" {
+resource "aws_instance" "gitlab_runner" {
 
   /* set the initial key for the instance */
   key_name = "${var.keypair}"
@@ -8,7 +8,7 @@ resource "aws_instance" "ubuntu16" {
 
   /* select the appropriate AMI (can generate one using enclosed packer template) */
   ami = "${var.inst_amid["${var.region["primary"]}"]}"
-  instance_type = "${var.inst_type}"
+  instance_type = "${var.inst_type["runner"]}"
 
   /* delete the volume on termination */
   root_block_device {
@@ -16,32 +16,25 @@ resource "aws_instance" "ubuntu16" {
   }
 
   /* security group membership */
-  security_groups = ["${aws_security_group.allow_ssh_inbound.name}"]
+  security_groups = ["${aws_security_group.gitlab_runner_inbound.name}", "default" ]
 
   /* number of hosts to create */
-  count = "${var.inst_count}"
+  count = "${var.inst_count["runner"]}"
 
   tags {
-    Name = "ubuntu"
+    Name = "gitlab_runner"
     Platform = "Ubuntu 16.04 LTS"
-    Tier = "test"
+    Tier = "gitlab"
   }
 }
 
-resource "aws_security_group" "allow_ssh_inbound" {
-  name        = "tf_allow_ssh_inbound_kpederson"
+resource "aws_security_group" "gitlab_runner_inbound" {
+  name        = "tf_gitlab_runner_inbound"
   description = "Allow inbound ssh traffic"
 
   ingress {
     from_port   = 22
     to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    from_port   = 80
-    to_port     = 80
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -54,6 +47,6 @@ resource "aws_security_group" "allow_ssh_inbound" {
   }
 }
 
-output "ubuntu16_public_address(es)" {
-  value = "${join(",", aws_instance.ubuntu16.*.public_dns)}"
+output "gitlab_runner_public_address(es)" {
+  value = "${join(",", aws_instance.gitlab_runner.*.public_dns)}"
 }

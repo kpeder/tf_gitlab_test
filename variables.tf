@@ -14,8 +14,21 @@ variable "region" {
 
 variable "aws_profile" { default = "default" }
 
-variable "inst_type"  { default = "t2.large" }
-variable "inst_count" { default = 1 }
+variable "inst_type"  { 
+  type = "map"
+  default = {
+    "server" = "t2.large"
+    "runner" = "t2.small"
+  }
+}
+
+variable "inst_count" {
+  type = "map"
+  default = {
+    "server" = "1"
+    "runner" = "2"
+  }
+}
 
 variable "inst_amid" {
   type = "map"
