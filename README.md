@@ -1,14 +1,14 @@
 # tf_gitlab_test
 Instance to install and fiddle with gitlab
 
-###Resources:
+### Resources:
 
 - 'provisioner.tf' contains initial setup commands
 - 'server.tf' specifies gitlab server instance details and inbound interface accesses
 - 'runner.tf' specifies gitlab runner instance details and inbound interface accesses
 - 'variables.tf' sets most defaults, including instance sizes, counts and regions
 
-###Create a 'terraform.tfvars' with your own values:
+### Create a 'terraform.tfvars' with your own values:
 
 ```
 # see EC2 --> Network & Security --> Key Pairs
@@ -22,7 +22,7 @@ aws_profile = "default"
 
 # set your regional preferences;
 # only primary is currently used
-region      = { 
+region      = {
                 primary = "us-west-2"
                 backup  = "us-east-1"
               }
@@ -40,7 +40,7 @@ inst_count = {
              }
 ```
 
-###Use ssh-agent for the provisioner connection auth, no keyfile is specified.
+### Use the ssh-agent for the provisioner connection authentication
 
 ```
 $ eval $(ssh-agent)
@@ -49,4 +49,39 @@ $ ssh-add ~/.ssh/path/to/myprivatekey
 
 User is 'ubuntu' for defaulted images.
 
-Tested on Terraform v0.10.7.
+### Backup and Restore Procedures (to be automated)
+
+#### Backup:
+- connect to the gitlab_server instance
+- run the backup and note the resulting tarball location
+```
+$ sudo gitlab-rake gitlab:backup:create
+...
+$ sudo ls -l /var/opt/gitlab/backups
+...
+```
+
+#### Restore
+- place the archive file to restore in the /var/opt/gitlab/backups directory
+- run the restore
+```
+$ sudo gitlab-rake gitlab:backup:restore
+```
+- if the gitlab URL (external dns name) has changed, then we also need to update the following items:
+
+...in file /home/git/gitlab/config/gitlab.yml:
+```
+    gitlab:
+      host: <<your-gitlab-server-public-dns-name>>
+```
+...in file /home/git/gitlab-shell/config.yml
+```
+  gitlab_url: "https://<<your-gitlab-server-public-dns-name>>"
+```
+...in file /etc/nginx/sites-available/gitlab
+```
+  server {
+    server_name <<your-gitlab-server-public-dns-name>>
+```
+
+#### Tested on Terraform 0.10.7.
