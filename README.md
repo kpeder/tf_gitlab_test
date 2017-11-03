@@ -1,10 +1,14 @@
 # tf_gitlab_test
 Instance to install and fiddle with gitlab
 
+###Resources:
+
 - 'provisioner.tf' contains initial setup commands
-- 'inst.tf' specifies instance details and inbound interface accesses
-- 'variables.tf' sets most defaults
-- create a 'terraform.tfvars' with your own values:
+- 'server.tf' specifies gitlab server instance details and inbound interface accesses
+- 'runner.tf' specifies gitlab runner instance details and inbound interface accesses
+- 'variables.tf' sets most defaults, including instance sizes, counts and regions
+
+###Create a 'terraform.tfvars' with your own values:
 
 ```
 # see EC2 --> Network & Security --> Key Pairs
@@ -24,13 +28,24 @@ region      = {
               }
 
 # Size of the box
-inst_type  = "t2.large"
+inst_type  = {
+                server = "t2.large"
+                runner = "t2.small"
+             }
 
 # Number of boxes
-inst_count = "1"
+inst_count = {
+                server = "1"
+                runner = "1"
+             }
 ```
 
-Use ssh-agent for the provisioner connection auth, no keyfile is specified.
+###Use ssh-agent for the provisioner connection auth, no keyfile is specified.
+
+```
+$ eval $(ssh-agent)
+$ ssh-add ~/.ssh/path/to/myprivatekey
+```
 
 User is 'ubuntu' for defaulted images.
 
