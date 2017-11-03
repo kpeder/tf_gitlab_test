@@ -27,5 +27,5 @@ region      = {
 inst_type  = "t2.large"
 
 # Number of boxes
-inst_count = "2"
+inst_count = "1"
 ```
