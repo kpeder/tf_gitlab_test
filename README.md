@@ -29,3 +29,9 @@ inst_type  = "t2.large"
 # Number of boxes
 inst_count = "1"
 ```
+
+Use ssh-agent for the provisioner connection auth, no keyfile is specified.
+
+User is 'ubuntu' for defaulted images.
+
+Tested on Terraform v0.10.7.
