@@ -61,7 +61,7 @@ $ sudo ls -l /var/opt/gitlab/backups
 ...
 ```
 
-#### Restore
+#### Restore:
 - place the archive file to restore in the /var/opt/gitlab/backups directory
 - run the restore
 ```
