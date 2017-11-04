@@ -49,7 +49,7 @@ $ ssh-add ~/.ssh/path/to/myprivatekey
 
 User is 'ubuntu' for defaulted images.
 
-### Backup and Restore Procedures (to be automated)
+### Backup and Restore Procedures
 
 #### Backup:
 - connect to the gitlab_server instance
@@ -60,28 +60,22 @@ $ sudo gitlab-rake gitlab:backup:create
 $ sudo ls -l /var/opt/gitlab/backups
 ...
 ```
+- scp the latest tarball to your local system before shutting down the server
+```
+$ scp ubuntu@$(terraform output|grep server|awk '{print $NF}'):/var/opts/gitlab/backups/<<somefile>>.tar
+```
 
 #### Restore:
-- place the archive file to restore in the /var/opt/gitlab/backups directory
-- run the restore
+- place the archive file to restore in the project root or some other referenceable directory on your local system
+- run the restore by adding the following variables in your terraform.tfvars file... generally needed on initial redeploy of the gitlab server instance
 ```
-$ sudo gitlab-rake gitlab:backup:restore
+gitlab_server_backup = {
+                         "archive_to_restore"  = "my_archive_gitlab_backup.tar" # for example
+                         "restore_flag"        = "1"                            # default is 0, good idea to set to 0 again after a restore
+                       }
 ```
-- if the gitlab URL (external dns name) has changed, then we also need to update the following items:
+- restore doesn't affect the server's configuration, only the project data, repositories, users, etc. (stuff you'll configure in the UI, mostly), so best to restore on a freshly deployed server
+- this will break some GitLab features under some conditions and is not meant to be a robust solution at this time (if 2FA is enabled for instance, the encryption keys in the configuration are not backed up)
+- see https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/raketasks/backup_restore.md for a proper treatment from the vendor
 
-...in file /home/git/gitlab/config/gitlab.yml:
-```
-    gitlab:
-      host: <<your-gitlab-server-public-dns-name>>
-```
-...in file /home/git/gitlab-shell/config.yml
-```
-  gitlab_url: "https://<<your-gitlab-server-public-dns-name>>"
-```
-...in file /etc/nginx/sites-available/gitlab
-```
-  server {
-    server_name <<your-gitlab-server-public-dns-name>>
-```
-
-#### Tested on Terraform 0.10.7.
+#### Tested on Terraform 0.10.7

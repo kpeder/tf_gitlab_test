@@ -22,6 +22,14 @@ variable "inst_type"  {
   }
 }
 
+variable "inst_disk_sz" {
+  type = "map"
+  default = {
+    "server" = "60"
+    "runner" = "20"
+  }
+}
+
 variable "inst_count" {
   type = "map"
   default = {
@@ -35,5 +43,18 @@ variable "inst_amid" {
   default = {
     "us-west-2" = "ami-0a00ce72"
     "us-east-1" = "ami-da05a4a0"
+  }
+}
+
+variable "gitlab_server_backup" {
+  type = "map"
+  description = <<DESC
+  A variable map to configure an optional gitlab restore
+    - set "archive_to_restore" to a local file path containing a gitlab backup archive; this will be copied and restored
+    - set "restore_flag" to "1" for enabled and "0" for disabled
+  DESC
+  default = {
+    "archive_to_restore" = ""
+    "restore_flag" = "0"
   }
 }

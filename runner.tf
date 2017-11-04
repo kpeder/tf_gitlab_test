@@ -12,6 +12,7 @@ resource "aws_instance" "gitlab_runner" {
 
   /* delete the volume on termination */
   root_block_device {
+    volume_size = "${var.inst_disk_sz["runner"]}"
     delete_on_termination = true
   }
 

@@ -12,6 +12,7 @@ resource "aws_instance" "gitlab_server" {
 
   /* delete the volume on termination */
   root_block_device {
+    volume_size = "${var.inst_disk_sz["server"]}"
     delete_on_termination = true
   }
 

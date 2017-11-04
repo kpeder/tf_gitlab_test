@@ -1,7 +1,7 @@
 resource "null_resource" "gitlab_server_provisioner" {
 
   triggers {
-    instance_id = "${join(",", aws_instance.gitlab_server.*.id)}"
+    instance_ids = "${join(",", aws_instance.gitlab_server.*.id)}"
   }
 
   provisioner "remote-exec" {
@@ -52,7 +52,7 @@ resource "null_resource" "gitlab_server_provisioner" {
 resource "null_resource" "gitlab_runner_provisioner" {
 
   triggers {
-    instance_id = "${join(",", aws_instance.gitlab_runner.*.id)}"
+    instance_ids = "${join(",", aws_instance.gitlab_runner.*.id)}"
   }
 
   provisioner "remote-exec" {
@@ -98,3 +98,33 @@ resource "null_resource" "gitlab_runner_provisioner" {
 
 }
 
+resource "null_resource" "gitlab_server_restore" {
+
+  depends_on = [ "null_resource.gitlab_server_provisioner" ]
+
+  triggers {
+    instance_ids = "${join(",", aws_instance.gitlab_server.*.id)}"
+  }
+
+  provisioner "file" {
+    source      = "${var.gitlab_server_backup["archive_to_restore"]}"
+    destination = "/home/ubuntu/restore_archive.tar"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo mv /home/ubuntu/restore_archive.tar /var/opt/gitlab/backups/restore_archive_gitlab_backup.tar",
+      "sudo gitlab-rake gitlab:backup:restore BACKUP=restore_archive force=yes",
+      "sudo rm -f /var/opt/gitlab/backups/restore_archive_gitlab_backup.tar"
+    ]
+  }
+
+  connection {
+    type = "ssh"
+    user = "ubuntu"
+    host = "${element(aws_instance.gitlab_server.*.public_dns, count.index)}"
+  }
+
+  count = "${var.gitlab_server_backup["restore_flag"]}"
+
+}
