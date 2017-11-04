@@ -94,7 +94,7 @@ resource "null_resource" "gitlab_runner_provisioner" {
 
   }
 
-  count = "${var.inst_count["server"]}"
+  count = "${var.inst_count["runner"]}"
 
 }
 
