@@ -9,14 +9,16 @@ before_script:
   - rm /tmp/terraform.zip
   - mkdir /root/.ssh && chmod 0600 /root/.ssh
   - echo ${PROVISIONER_KEY} >/root/.ssh/id_rsa && chmod 0600 /root/.ssh/id_rsa
+  - mkdir /root/.aws && chmod 0600 /root/.aws
+  - cat <<EOF >/root/.aws/credentials && chmod 0600 /root/.aws/credentials
+    [default]
+    aws_access_key_id=${AWS_ACCESS_KEY}
+    aws_secret_access_key=${AWS_SECRET_ACCESS_KEY}
+    EOF
 
 test:
-  variables:
-    TF_VAR_region: "{ \"primary\" = \"us-east-1\", \"secondary\" = \"us-west-2\" }"
-
   script:
   - eval $(ssh-agent)
-  - pwd
   - terraform init
   - terraform plan
   only:
