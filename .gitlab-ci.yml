@@ -17,6 +17,7 @@ test:
   script:
   - eval $(ssh-agent)
   - pwd
+  - terraform init
   - terraform plan
   only:
   - master
