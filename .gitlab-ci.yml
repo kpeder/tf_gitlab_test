@@ -11,10 +11,11 @@ before_script:
   - echo ${PROVISIONER_KEY} >/root/.ssh/id_rsa && chmod 0600 /root/.ssh/id_rsa
 
 test:
+  variables:
+    TF_VAR_region: "{ primary: us-east-1, secondary: us-west-2 }"
   script:
   - eval $(ssh-agent)
-  - ssh-add /root/.ssh/id_rsa
-  - terraform --version
-  - pwd
+  - pwd; ls
+  - terraform plan
   only:
   - master
