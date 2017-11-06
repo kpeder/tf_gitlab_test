@@ -1,0 +1,12 @@
+image: apline:latest
+
+before_script:
+  - wget https://releases.hashicorp.com/terraform/0.10.7/terraform_0.10.7_linux_amd64.zip -O /tmp/terraform.zip
+  - sudo mkdir -p /opt/terraform/bin
+  - sudo unzip -d /opt/terraform/bin /tmp/terraform.zip
+  - sudo ln -s /opt/terraform/bin/terraform /usr/bin/terraform
+  - sudo rm /tmp/terraform.zip
+
+test:
+  script:
+  - terraform --version
