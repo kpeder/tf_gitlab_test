@@ -13,8 +13,9 @@ before_script:
 test:
   variables:
     TF_VAR_region:
-      primary: "us-east-1"
-      secondary: "us-west-2"
+        primary: "us-east-1"
+        secondary: "us-west-2"
+
   script:
   - eval $(ssh-agent)
   - pwd
