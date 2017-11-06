@@ -8,11 +8,12 @@ before_script:
   - ln -s /opt/terraform/bin/terraform /usr/bin/terraform
   - rm /tmp/terraform.zip
   - mkdir /root/.ssh && chmod 0600 /root/.ssh
-  - echo ${PROVISIONER_KEY} >/root/.ssh/id_rsa
+  - echo ${PROVISIONER_KEY} >/root/.ssh/id_rsa && chmod 0600 /root/.ssh/id_rsa
 
 test:
   script:
-  - eval $(ssh-agent) && ssh-add /root/.ssh/id_rsa
+  - eval $(ssh-agent)
+  - ssh-add -l
   - terraform --version
   - pwd
   only:
