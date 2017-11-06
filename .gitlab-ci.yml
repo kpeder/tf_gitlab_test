@@ -1,6 +1,7 @@
 image: ruby:2.1
 
 before_script:
+  - apt-get update && apt-get install -y unzip
   - wget https://releases.hashicorp.com/terraform/0.10.7/terraform_0.10.7_linux_amd64.zip -O /tmp/terraform.zip
   - mkdir -p /opt/terraform/bin
   - unzip -d /opt/terraform/bin /tmp/terraform.zip
