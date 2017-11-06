@@ -14,7 +14,8 @@ before_script:
     [default]
     aws_access_key_id=${AWS_ACCESS_KEY}
     aws_secret_access_key=${AWS_SECRET_ACCESS_KEY}
-    EOF && chmod 0600 /root/.aws/credentials
+    EOF
+  - chmod 0600 /root/.aws/credentials
 
 test:
   script:
