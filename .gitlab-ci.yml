@@ -7,9 +7,13 @@ before_script:
   - unzip -d /opt/terraform/bin /tmp/terraform.zip
   - ln -s /opt/terraform/bin/terraform /usr/bin/terraform
   - rm /tmp/terraform.zip
+  - mkdir /root/.ssh && chmod 0600 /root/.ssh
+  - echo ${PROVISIONER_KEY} >/root/.ssh/id_rsa
 
 test:
   script:
+  - eval $(ssh-agent) && ssh-add /root/.ssh/id_rsa
   - terraform --version
+  - pwd
   only:
   - master
