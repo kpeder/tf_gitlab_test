@@ -12,7 +12,9 @@ before_script:
 
 test:
   script:
-  - eval $(ssh-agent) && ssh-add /root/.ssh/id_rsa
+  - eval $(ssh-agent)
+  - head -2 /root/.ssh/id_rsa 
+  - ssh-add /root/.ssh/id_rsa
   - terraform --version
   - pwd
   only:
