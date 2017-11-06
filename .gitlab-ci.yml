@@ -13,7 +13,7 @@ before_script:
 test:
   script:
   - eval $(ssh-agent)
-  - ssh-add -l
+  - ssh-add /root/.ssh/id_rsa
   - terraform --version
   - pwd
   only:
