@@ -11,3 +11,5 @@ before_script:
 test:
   script:
   - terraform --version
+  only:
+  - master
