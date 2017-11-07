@@ -11,7 +11,7 @@ before_script:
 test:
   script:
   - eval $(ssh-agent -s)
-  - echo ${PROVISIONER_KEY} | base64 --decode | ssh-add -
+  - echo "${PROVISIONER_KEY}" | ssh-add -
   - terraform init
   - terraform plan
   only:
