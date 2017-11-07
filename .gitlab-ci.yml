@@ -9,13 +9,13 @@ before_script:
   - rm /tmp/terraform.zip
   - mkdir /root/.aws
   - echo "[default]" >/root/.aws/credentials && chmod 0600 /root/.aws/credentials
-  - echo "aws_access_key_id=${AWS_ACCESS_KEY_ID}" >>/root/.aws/credentials
-  - echo "aws_secret_access_key=${AWS_SECRET_ACCESS_KEY}" >>/root/.aws/credentials
+  - echo "aws_access_key_id=${CI_DEFAULT_AWS_ACCESS_KEY_ID}" >>/root/.aws/credentials
+  - echo "aws_secret_access_key=${CI_DEFAULT_AWS_SECRET_ACCESS_KEY}" >>/root/.aws/credentials
 
 deploy_ci_env:
   script:
   - eval $(ssh-agent -s)
-  - echo "${PROVISIONER_KEY}" | ssh-add -
+  - echo "${CI_DEFAULT_PROVISIONER_KEY}" | ssh-add -
   - echo "terraform {" >remote_state.tf
   - echo "  backend \"s3\" {" >>remote_state.tf
   - echo "    bucket  = \"my-tf-state-files\"" >>remote_state.tf
