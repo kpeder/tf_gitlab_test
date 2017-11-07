@@ -7,21 +7,24 @@ before_script:
   - unzip -d /opt/terraform/bin /tmp/terraform.zip
   - ln -s /opt/terraform/bin/terraform /usr/bin/terraform
   - rm /tmp/terraform.zip
+  - mkdir /root/.aws
+  - echo "[default]" >/root/.aws/credentials && chmod 0600 /root/.aws/credentials
+  - echo "aws_access_key_id=${AWS_ACCESS_KEY_ID}" >>/root/.aws/credentials
+  - echo "aws_secret_access_key=${AWS_SECRET_ACCESS_KEY}" >>/root/.aws/credentials
 
 deploy_ci_env:
   script:
   - eval $(ssh-agent -s)
   - echo "${PROVISIONER_KEY}" | ssh-add -
-  - cat <<HERE >remote_state.tf \
-    terraform { \
-      backend "s3" { \
-        bucket  = "my-tf-state-files" \
-        key     = "tf_gitlab_test/ci-state.tfstate" \
-        region  = "us-west-2" \
-        profile = "pederson" \
-      } \
-    } \
-    HERE
+  - echo "terraform {" >remote_state.tf
+  - echo "  backend \"s3\" {" >>remote_state.tf
+  - echo "    bucket  = \"my-tf-state-files\"" >>remote_state.tf
+  - echo "    key     = \"tf_gitlab_test/ci-state.tfstate\"" >>remote_state.tf
+  - echo "    region  = \"us-west-2\"" >>remote_state.tf
+  - echo "    profile = \"default\"" >>remote_state.tf
+  - echo "  }" >>remote_state.tf
+  - echo "}" >>remote_state.tf
+  - cat remote_state.tf
   - terraform init
   - terraform plan
   only:
