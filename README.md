@@ -40,6 +40,22 @@ inst_count = {
              }
 ```
 
+### Optional: remote state setup (recommended)
+
+- create an S3 bucket in AWS... not specified in the project because terraform depends on it
+- create a file 'remote_state.tf' with the followinf content
+```
+terraform {
+  backend "s3" {
+    bucket  = "my-tf-state-files"             # your bucket name
+    key     = "tf_gitlab_test/state.tfstate"  # path to the state file in your bucket
+    region  = "us-west-2"                     # region in which your bucket is located (can be different than the project's region)
+    profile = "default"                       # the AWS credentials profile to use for connection to the bucket
+  }
+}
+```
+
+
 ### Use the ssh-agent for the provisioner connection authentication
 
 ```
