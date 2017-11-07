@@ -25,6 +25,7 @@ deploy_ci_env:
 
 destroy_ci_env:
   stage: destruction
+  script:
   - terraform destroy -force
   only:
   - master
