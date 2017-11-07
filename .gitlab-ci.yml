@@ -8,6 +8,10 @@ before_script:
   - ln -s /opt/terraform/bin/terraform /usr/bin/terraform
   - rm /tmp/terraform.zip
 
+after_script:
+  - terraform destroy -force
+  when: always
+
 test:
   script:
   - eval $(ssh-agent -s)
