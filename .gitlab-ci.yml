@@ -29,5 +29,4 @@ destroy_ci_env:
   - terraform destroy -force
   only:
   - master
-  when:
-  - always
+  when: always
