@@ -8,7 +8,12 @@ before_script:
   - ln -s /opt/terraform/bin/terraform /usr/bin/terraform
   - rm /tmp/terraform.zip
 
-test:
+stages:
+  - deployment
+  - destruction
+
+deploy_ci_env:
+  stage: deployment
   script:
   - eval $(ssh-agent -s)
   - echo "${PROVISIONER_KEY}" | ssh-add -
@@ -16,3 +21,13 @@ test:
   - terraform plan
   only:
   - master
+
+
+destroy_ci_env:
+  stage: destruction
+  script:
+  - terraform destroy -force
+  only:
+  - master
+  when:
+  - always
