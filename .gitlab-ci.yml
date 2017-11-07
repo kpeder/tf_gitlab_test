@@ -7,16 +7,11 @@ before_script:
   - unzip -d /opt/terraform/bin /tmp/terraform.zip
   - ln -s /opt/terraform/bin/terraform /usr/bin/terraform
   - rm /tmp/terraform.zip
-  - mkdir /root/.ssh && chmod 0600 /root/.ssh
-  - echo ${PROVISIONER_KEY} >/root/.ssh/id_rsa && chmod 0600 /root/.ssh/id_rsa
-  - mkdir /root/.aws && chmod 0600 /root/.aws
-  - echo "[default]" >/root/.aws/credentials && chmod 0600 /root/.aws/credentials
-  - echo "aws_access_key_id=${AWS_ACCESS_KEY}" >>/root/.aws/credentials
-  - echo "aws_secret_access_key=${AWS_SECRET_ACCESS_KEY}" >>/root/.aws/credentials
 
 test:
   script:
-  - eval $(ssh-agent)
+  - eval $(ssh-agent -s)
+  - echo ${PROVISIONER_KEY} | base64 --decode | ssh-add -
   - terraform init
   - terraform plan
   only:
