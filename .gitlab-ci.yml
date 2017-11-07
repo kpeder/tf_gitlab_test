@@ -8,25 +8,21 @@ before_script:
   - ln -s /opt/terraform/bin/terraform /usr/bin/terraform
   - rm /tmp/terraform.zip
 
-stages:
-  - deployment
-  - destruction
-
 deploy_ci_env:
-  stage: deployment
   script:
   - eval $(ssh-agent -s)
   - echo "${PROVISIONER_KEY}" | ssh-add -
+  - cat <<HERE >remote_state.tf
+    terraform {
+      backend "s3" {
+        bucket  = "my-tf-state-files"
+        key     = "tf_gitlab_test/ci-state.tfstate"
+        region  = "us-west-2"
+        profile = "pederson"
+      }
+    }
+    HERE
   - terraform init
   - terraform plan
   only:
   - master
-
-
-destroy_ci_env:
-  stage: destruction
-  script:
-  - terraform destroy -force
-  only:
-  - master
-  when: always
