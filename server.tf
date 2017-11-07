@@ -30,7 +30,6 @@ resource "aws_instance" "gitlab_server" {
 }
 
 resource "aws_security_group" "gitlab_server_inbound" {
-  name        = "tf_gitlab_server_inbound"
   description = "Allow inbound ssh traffic"
 
   ingress {
