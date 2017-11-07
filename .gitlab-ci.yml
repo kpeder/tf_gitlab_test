@@ -7,6 +7,7 @@ before_script:
   - unzip -d /opt/terraform/bin /tmp/terraform.zip
   - ln -s /opt/terraform/bin/terraform /usr/bin/terraform
   - rm /tmp/terraform.zip
+  - mkdir /root/.aws
   - echo "[default]" >/root/.aws/credentials && chmod 0600 /root/.aws/credentials
   - echo "aws_access_key_id=${AWS_ACCESS_KEY_ID}" >>/root/.aws/credentials
   - echo "aws_secret_access_key=${AWS_SECRET_ACCESS_KEY}" >>/root/.aws/credentials
