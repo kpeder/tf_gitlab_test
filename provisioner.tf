@@ -111,11 +111,17 @@ resource "null_resource" "gitlab_server_restore" {
     destination = "/home/ubuntu/restore_archive.tar"
   }
 
+  provisioner "file" {
+    source      = "gitlab-secrets.json"
+    destination = "/home/ubuntu/gitlab-secrets.json"
+  }
+
   provisioner "remote-exec" {
     inline = [
       "sudo mv /home/ubuntu/restore_archive.tar /var/opt/gitlab/backups/restore_archive_gitlab_backup.tar",
       "sudo gitlab-rake gitlab:backup:restore BACKUP=restore_archive force=yes",
-      "sudo rm -f /var/opt/gitlab/backups/restore_archive_gitlab_backup.tar"
+      "sudo cp gitlab-secrets.json /etc/gitlab/gitlab-secrets.json && sudo chmod 0600 /etc/gitlab/gitlab-secrets.json && sudo chown root:root /etc/gitlab/gitlab-secrets.json",
+      "sudo rm -f /var/opt/gitlab/backups/restore_archive_gitlab_backup.tar gitlab-secrets.json"
     ]
   }
 
