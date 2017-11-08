@@ -4,3 +4,7 @@
 *swp
 *state
 *tmp
+*tar
+*tgz
+*tar.gz
+remote_state.tf
