@@ -23,7 +23,7 @@ resource "aws_instance" "gitlab_runner" {
   count = "${var.inst_count["runner"]}"
 
   tags {
-    Name = "gitlab_runner"
+    Role = "gitlab_runner"
     Platform = "Ubuntu 16.04 LTS"
     Tier = "gitlab"
   }
