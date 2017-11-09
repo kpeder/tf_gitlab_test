@@ -59,10 +59,11 @@ variable "gitlab_server_backup" {
   description = <<DESC
   A variable map to configure an optional gitlab restore
     - set "archive_to_restore" to a local file path containing a gitlab backup archive; this will be copied and restored
+      (this shouldn't change, provisioner uses restore_archive for stub amd gitlab-rake uses gitlab_backup.tar for suffix filter)
     - set "restore_flag" to "1" for enabled and "0" for disabled
   DESC
   default = {
-    "archive_to_restore" = ""
+    "archive_to_restore" = "restore_archive_gitlab_backup.tar"
     "restore_flag" = "0"
   }
 }
