@@ -34,7 +34,7 @@ resource "null_resource" "gitlab_server_provisioner" {
       "echo 'installing postfix'",
       "sudo apt-get install -y postfix",
       "echo 'installing gitlab'",
-      "sudo EXTERNAL_URL='http://${element(aws_instance.gitlab_server.*.public_dns, count.index)}' apt-get install -y gitlab-ee"
+      "sudo EXTERNAL_URL='http://${element(aws_instance.gitlab_server.*.public_dns, count.index)}' apt-get install -y gitlab-ee=${var.gitlab_version["server"]}"
     ]
 
     connection {
@@ -83,7 +83,7 @@ resource "null_resource" "gitlab_runner_provisioner" {
       "#echo 'installing ansible'",
       "#sudo apt-get install -y ansible",
       "echo 'installing gitlab'",
-      "sudo apt-get install -y gitlab-runner"
+      "sudo apt-get install -y gitlab-runner=${var.gitlab_version["runner"]}"
     ]
 
     connection {

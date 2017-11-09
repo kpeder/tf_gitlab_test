@@ -46,6 +46,14 @@ variable "inst_amid" {
   }
 }
 
+variable "gitlab_version" { 
+  type="map"
+  default = {
+    "server" = "10.1.1-ee.0"
+    "runner" = "10.1.0"
+  }
+}
+
 variable "gitlab_server_backup" {
   type = "map"
   description = <<DESC
