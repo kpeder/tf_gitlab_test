@@ -42,8 +42,9 @@ inst_count = {
 
 ### Optional: remote state setup (recommended)
 
-- create an S3 bucket in AWS... not specified in the project because terraform depends on it
-- create a file 'remote_state.tf' with the followinf content
+Create an S3 bucket in AWS... not specified in the project because terraform depends on it
+
+Create a file 'remote_state.tf' with the followinf content
 ```
 terraform {
   backend "s3" {
@@ -68,30 +69,31 @@ User is 'ubuntu' for defaulted images.
 ### Backup and Restore Procedures
 
 #### Backup:
-- connect to the gitlab_server instance
-- run the backup and note the resulting tarball location
+
+Connect to the GitLab server instance
+Run the backup and note the resulting tarball location
 ```
 $ sudo gitlab-rake gitlab:backup:create
-...
-$ sudo ls -l /var/opt/gitlab/backups
-...
+$ sudo ls /var/opt/gitlab/backups
+1510189685_2017_11_09_10.1.1-ee-gitlab_backup.tar
 ```
-- scp the latest tarball to your local system before shutting down the server
-```
-$ scp ubuntu@$(terraform output|grep server|awk '{print $NF}'):/var/opts/gitlab/backups/<<somefile>>.tar
-```
+Do something with both the tarball, and the /etc/gitlab/gitlab-secrets.json, to keep them safe and correlated; this is your backup set
+
+Secure copy the latest backup set to your local system before shutting down the server
 
 #### Restore:
-- place the archive file to restore in the project root or some other referenceable directory on your local system
-- run the restore by adding the following variables in your terraform.tfvars file... generally needed on initial redeploy of the gitlab server instance
+
+Place the archive file and 'gitlab-secrets.json' files to restore in the project root on your local system.
+
+Run the restore by adding the following variables in your terraform.tfvars file... generally needed on initial redeploy of the gitlab server instance
 ```
 gitlab_server_backup = {
                          "archive_to_restore"  = "my_archive_gitlab_backup.tar" # for example
                          "restore_flag"        = "1"                            # default is 0, good idea to set to 0 again after a restore
                        }
 ```
-- restore doesn't affect the server's configuration, only the project data, repositories, users, etc. (stuff you'll configure in the UI, mostly), so best to restore on a freshly deployed server
-- this will break some GitLab features under some conditions and is not meant to be a robust solution at this time (if 2FA is enabled for instance, the encryption keys in the configuration are not backed up)
-- see https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/raketasks/backup_restore.md for a proper treatment from the vendor
+Note that runners, CI/CD variables and 2FA will break if you don't place the correlated secrets file with the restore.
+
+See https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/raketasks/backup_restore.md for a proper treatment from the vendor about backup and restore.
 
 #### Tested on Terraform 0.10.7
