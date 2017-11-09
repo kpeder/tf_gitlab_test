@@ -122,7 +122,7 @@ resource "null_resource" "gitlab_server_restore" {
       "sudo gitlab-ctl stop unicorn; sudo gitlab-ctl stop sidekiq",
       "sudo gitlab-rake gitlab:backup:restore BACKUP=restore_archive force=yes",
       "sudo cp gitlab-secrets.json /etc/gitlab/gitlab-secrets.json && sudo chmod 0600 /etc/gitlab/gitlab-secrets.json && sudo chown root:root /etc/gitlab/gitlab-secrets.json",
-      "sudo gitlab-ctl restart && sudo gitlab-rake gitlab:check SANITIZE=true",
+      "sudo gitlab-ctl reconfigure",
       "sudo rm -f /var/opt/gitlab/backups/restore_archive_gitlab_backup.tar gitlab-secrets.json"
     ]
   }
