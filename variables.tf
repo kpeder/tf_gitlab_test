@@ -1,5 +1,7 @@
 /* Global variables */
 variable "keypair" {}
+variable  "alb_cert_arn" {}
+variable  "hosted_zone_id" {}
 
 /* Region-specific setup is below. Uses
    multiple regions, "primary" & "backup" for DR. */
@@ -67,3 +69,41 @@ variable "gitlab_server_backup" {
     "restore_flag" = "0"
   }
 }
+
+#setup variable for the DNS zone 
+#change the gitlab_url to match the name of the server you want in the zone
+# IE: gitlab-server.example.com
+
+variable "dns" {
+  type = "map"
+
+  default = {
+    gitlab_url = "gitlab-server"
+    record_ttl  = 60
+  }
+}
+
+#initialize vpc_id
+variable "vpc_id" { default =""}
+
+#setup for ALB CERT
+variable "environment" {
+  type = "map"
+
+  default = {
+    description     = "Gitlab environment"
+    hacfg           = false
+    name            = "Default"
+    orchestrator    = ""
+    public_endpoint = true
+    custom_catalog  = ""
+    protocol        = "https"
+  }
+}
+
+#This is for ALB
+variable "version" {
+  type    = "string"
+  default = "latest"
+}
+
