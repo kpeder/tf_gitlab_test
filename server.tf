@@ -30,18 +30,11 @@ resource "aws_instance" "gitlab_server" {
 }
 
 resource "aws_security_group" "gitlab_server_inbound" {
-  description = "Allow inbound ssh traffic"
+  description = "Allow inbound ssh traffic on gitlab server"
 
   ingress {
     from_port   = 22
     to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    from_port   = 80
-    to_port     = 80
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }

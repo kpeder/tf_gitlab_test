@@ -1,7 +1,7 @@
 /* Global variables */
-variable "keypair" {}
-variable  "alb_cert_arn" {}
-variable  "hosted_zone_id" {}
+variable "keypair" { default = "cortmaior-key" }
+variable  "alb_cert_arn" { default = "arn:aws:acm:us-west-2:272454344428:certificate/4217e124-da93-4b2d-b450-e32a2f25dde5" }
+variable  "hosted_zone_id" { default = "Z2QZ6OE3UET6VF" }
 
 /* Region-specific setup is below. Uses
    multiple regions, "primary" & "backup" for DR. */
@@ -80,6 +80,7 @@ variable "dns" {
   default = {
     gitlab_url = "gitlab-server"
     record_ttl  = 60
+    record_type = "CNAME"  
   }
 }
 
@@ -87,19 +88,19 @@ variable "dns" {
 variable "vpc_id" { default =""}
 
 #setup for ALB CERT
-variable "environment" {
-  type = "map"
-
-  default = {
-    description     = "Gitlab environment"
-    hacfg           = false
-    name            = "Default"
-    orchestrator    = ""
-    public_endpoint = true
-    custom_catalog  = ""
-    protocol        = "https"
-  }
-}
+#variable "environment" {
+#  type = "map"
+#
+#  default = {
+#    description     = "Gitlab environment"
+#    hacfg           = false
+#    name            = "Default"
+#    orchestrator    = ""
+#    public_endpoint = true
+##    custom_catalog  = ""
+#    protocol        = "https"
+#  }
+#}
 
 #This is for ALB
 variable "version" {
@@ -107,3 +108,7 @@ variable "version" {
   default = "latest"
 }
 
+variable "cidr" {
+	type = "list"
+	default = ["0.0.0.0/0"]
+}

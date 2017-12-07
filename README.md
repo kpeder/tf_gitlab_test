@@ -66,6 +66,13 @@ $ ssh-add ~/.ssh/path/to/myprivatekey
 
 User is 'ubuntu' for defaulted images.
 
+### Automagic DNS Registration and ALB Creation.
+
+Note: this requires you to have a hosted zone, from which you'll need the ZONEID
+Note: this also require you to have a CERT attached to the zone in the region in which you're deploying
+
+variables.tf has the fields you'll need to update
+
 ### Backup and Restore Procedures
 
 #### Backup:

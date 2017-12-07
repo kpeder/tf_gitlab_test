@@ -13,7 +13,6 @@ resource "aws_security_group_rule" "alb_ingress_https" {
   protocol          = "tcp"
   cidr_blocks = ["0.0.0.0/0"]
   security_group_id = "${aws_security_group.alb.id}"
-  count             = "${var.environment["protocol"] == "https" ? 1 : 0}"
 }
 
 resource "aws_security_group_rule" "alb_egress_all" {
@@ -41,14 +40,6 @@ resource "aws_security_group_rule" "server_ingress_all" {
   security_group_id = "${aws_security_group.server.id}"
 }
 
-resource "aws_security_group_rule" "server_ingress_ssh_workstation" {
-  type              = "ingress"
-  from_port         = 22
-  to_port           = 22
-  protocol          = "tcp"
-  cidr_blocks = ["0.0.0.0/0"]
-  security_group_id = "${aws_security_group.server.id}"
-}
 
 resource "aws_security_group_rule" "server_egress_all" {
   type              = "egress"
@@ -59,4 +50,12 @@ resource "aws_security_group_rule" "server_egress_all" {
   security_group_id = "${aws_security_group.server.id}"
 }
 
-
+resource "aws_security_group_rule" "alb_ingress_http_server" {
+  description = "the problem"
+  type              = "ingress"
+  from_port         = 80
+  to_port           = 80
+  protocol          = "tcp"
+  security_group_id = "${aws_security_group.gitlab_server_inbound.id}"
+  source_security_group_id = "${aws_security_group.alb.id}"
+}
