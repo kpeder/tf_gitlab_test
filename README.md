@@ -7,6 +7,10 @@ Instance to install and fiddle with gitlab
 - 'server.tf' specifies gitlab server instance details and inbound interface accesses
 - 'runner.tf' specifies gitlab runner instance details and inbound interface accesses
 - 'variables.tf' sets most defaults, including instance sizes, counts and regions
+- 'alb.tf' sets up and Application Load Balancer which connects to gitllab server
+- 'route53.tf' sets up DNS for the ALB
+- 'subnet_list.tf' looks at your DEFAULT vpc and grabs the list of valid subnets (for the ALB to use)
+- 'security_groups.tf' setups up the security groups for the ALB
 
 ### Create a 'terraform.tfvars' with your own values:
 
@@ -65,6 +69,13 @@ $ ssh-add ~/.ssh/path/to/myprivatekey
 ```
 
 User is 'ubuntu' for defaulted images.
+
+### Automagic DNS Registration and ALB Creation.
+
+Note: this requires you to have a hosted zone, from which you'll need the ZONEID
+Note: this also require you to have a CERT attached to the zone in the region in which you're deploying
+
+variables.tf has the fields you'll need to update (the first three are the most important)
 
 ### Backup and Restore Procedures
 
