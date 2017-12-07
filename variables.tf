@@ -1,7 +1,7 @@
 /* Global variables */
-variable "keypair" { default = "cortmaior-key" }
-variable  "alb_cert_arn" { default = "arn:aws:acm:us-west-2:272454344428:certificate/4217e124-da93-4b2d-b450-e32a2f25dde5" }
-variable  "hosted_zone_id" { default = "Z2QZ6OE3UET6VF" }
+variable "keypair" {}
+variable  "alb_cert_arn" {}
+variable  "hosted_zone_id" {}
 
 /* Region-specific setup is below. Uses
    multiple regions, "primary" & "backup" for DR. */
@@ -70,7 +70,7 @@ variable "gitlab_server_backup" {
   }
 }
 
-#setup variable for the DNS zone 
+#Setup variables for the DNS zone 
 #change the gitlab_url to match the name of the server you want in the zone
 # IE: gitlab-server.example.com
 
@@ -87,20 +87,6 @@ variable "dns" {
 #initialize vpc_id
 variable "vpc_id" { default =""}
 
-#setup for ALB CERT
-#variable "environment" {
-#  type = "map"
-#
-#  default = {
-#    description     = "Gitlab environment"
-#    hacfg           = false
-#    name            = "Default"
-#    orchestrator    = ""
-#    public_endpoint = true
-##    custom_catalog  = ""
-#    protocol        = "https"
-#  }
-#}
 
 #This is for ALB
 variable "version" {
@@ -108,6 +94,8 @@ variable "version" {
   default = "latest"
 }
 
+#Whitelist of CIDR blocks allows to SSH in and such.
+#Defaults to everyone
 variable "cidr" {
 	type = "list"
 	default = ["0.0.0.0/0"]

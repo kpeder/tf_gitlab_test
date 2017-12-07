@@ -1,17 +1,17 @@
-# Begin ALB security group and rules
-
+# Begin security group and rules for the ALB and (one for the gitlab server)
 
 resource "aws_security_group" "alb" {
   name   = "alb-sg-tf"
   vpc_id = "${aws_security_group.gitlab_server_inbound.vpc_id}"
 }
 
+#ALB Accepts SSL from the CIDR block list
 resource "aws_security_group_rule" "alb_ingress_https" {
   type              = "ingress"
   from_port         = 443
   to_port           = 443
   protocol          = "tcp"
-  cidr_blocks = ["0.0.0.0/0"]
+  cidr_blocks       = "${var.cidr}"
   security_group_id = "${aws_security_group.alb.id}"
 }
 
@@ -20,7 +20,7 @@ resource "aws_security_group_rule" "alb_egress_all" {
   from_port         = 0
   to_port           = 0
   protocol          = "-1"
-  cidr_blocks = ["0.0.0.0/0"]
+  cidr_blocks       = "${var.cidr}"
   security_group_id = "${aws_security_group.alb.id}"
 }
 
@@ -46,12 +46,13 @@ resource "aws_security_group_rule" "server_egress_all" {
   from_port         = 0
   to_port           = 0
   protocol          = "-1"
-  cidr_blocks = ["0.0.0.0/0"]
+  cidr_blocks       = "${var.cidr}"
   security_group_id = "${aws_security_group.server.id}"
 }
 
+#ALB forwards traffic from itself to the gitlab server on port 80
+
 resource "aws_security_group_rule" "alb_ingress_http_server" {
-  description = "the problem"
   type              = "ingress"
   from_port         = 80
   to_port           = 80
